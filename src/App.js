@@ -1,26 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
-import Signup from "./pages/Signup";
-import Navbar from "./components/Navbar";
+import AppRouter from "./router/Router";
+import AuthContextProvider from "./context/AuthContext";
 
 function App() {
 
-  console.log(process.env);
-
   return (
-    <div className="App">
-      <Navbar/>
-      <Signup/>
-
-
-{/* 
- route
- signin
- signup
- forgotpassword
- ...
-*/}
-    </div>
+    <AuthContextProvider>
+      <AppRouter />
+    </AuthContextProvider>
   );
 }
 
