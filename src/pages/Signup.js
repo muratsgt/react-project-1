@@ -3,6 +3,17 @@ import { Button, TextField, Grid, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
 import firebase from "../firebase/firebase.utils";
+import * as Yup from "yup";
+
+const signupSchema = Yup.object().shape({
+  displayName: Yup.string()
+    .required("Display name is required")
+    .min(4, "Should be 4 chars minimum."),
+  email: Yup.string().email("Invalid Email").required("Email required"),
+  password: Yup.string()
+    .required("No password provided.")
+    .min(8, "Password is too short - should be 8 chars minimum."),
+});
 
 const styles = makeStyles({
   wrapper: {
@@ -21,6 +32,7 @@ function Signup() {
     onSubmit: (values) => {
       firebase.register(values.displayName, values.email, values.password);
     },
+    validationSchema: signupSchema,
   });
 
   const googleClick = () => {
@@ -36,35 +48,40 @@ function Signup() {
             <Grid item xs={12}>
               <TextField
                 name="displayName"
-                name="displayName"
                 label="Display Name"
                 variant="outlined"
                 fullWidth
                 value={formik.values.displayName}
                 onChange={formik.handleChange}
+                error={formik.errors.displayName}
+                helperText={formik.errors.displayName}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                name="email"
                 id="outlined-basic"
                 label="E-mail"
                 variant="outlined"
                 fullWidth
-                name="email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
+                error={formik.errors.email}
+                helperText={formik.errors.email}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                name="password"
                 id="outlined-basic"
                 label="Password"
                 variant="outlined"
                 fullWidth
-                name="password"
                 type="password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
+                error={formik.errors.password}
+                helperText={formik.errors.password}
               />
             </Grid>
             <Grid item xs={12}>
