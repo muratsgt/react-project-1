@@ -1,23 +1,37 @@
 import React from "react";
-import { Button, TextField, Grid, Container } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Grid,
+  Container,
+  Avatar,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import firebase from "../firebase/firebase.utils";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
 const signinSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email required"),
   password: Yup.string()
-  .required('No password provided.') 
-  .min(8, 'Password is too short - should be 8 chars minimum.')
+    .required("No password provided.")
+    .min(8, "Password is too short - should be 8 chars minimum."),
 });
 
-const styles = makeStyles({
+const styles = makeStyles((theme) => ({
   wrapper: {
     marginTop: "5rem",
-    padding: 5,
+    height: "calc(100vh - 20rem)",
+    textAlign: "center",
   },
-});
+  avatar: {
+    margin: "2rem auto",
+    backgroundColor: theme.palette.secondary.main,
+    padding: 3,
+  },
+}));
 
 const initialValues = {
   email: "",
@@ -34,8 +48,15 @@ function Signin() {
   };
 
   const signinStyles = styles();
+
   return (
     <Container className={signinStyles.wrapper} maxWidth="sm">
+      <Avatar className={signinStyles.avatar}>
+        <LockOutlinedIcon />
+      </Avatar>
+      <Typography variant="h4">
+        Sign in
+      </Typography>
       <Formik
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
