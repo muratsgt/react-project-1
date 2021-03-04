@@ -13,10 +13,10 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    width: 345,
   },
   media: {
-    height: 140,
+    height: 300,
   },
 });
 
@@ -29,6 +29,7 @@ const useStyles = makeStyles({
 
 export default function MediaCard({ user }) {
   const { email, firstName, id, lastName, picture, title } = user;
+  title[0].toUpperCase()
 
   const classes = useStyles();
   const history = useHistory();
@@ -42,23 +43,20 @@ export default function MediaCard({ user }) {
         <CardMedia
           className={classes.media}
           image={picture}
-          title={`${capitalize(title)} ${firstName} ${lastName}`}
+          title={`${title} ${firstName} ${lastName}`}
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {title} {firstName} {lastName}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            email: {email}
+        <CardContent style={{padding: 9}}>
+          <Typography variant="h5" component="h2">
+            {capitalize(title)} {firstName} {lastName}
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary">
-          View Full Profile
+      <CardActions style={{display: "flex", justifyContent: "center"}}>
+        <Button onClick={cardClick} size="medium" color="primary">
+          Profile
         </Button>
-        <Button size="small" color="primary">
-          View User Posts
+        <Button  color="secondary">
+          Posts
         </Button>
       </CardActions>
     </Card>

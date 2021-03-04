@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Container, Typography, Grid } from "@material-ui/core";
+import {
+  Container,
+  Typography,
+  Grid,
+  CircularProgress,
+} from "@material-ui/core";
 import axios from "axios";
 import MediaCard from "../components/MediaCard";
 // import { fetchData } from "../helper/FetchData";
@@ -8,7 +13,7 @@ import MediaCard from "../components/MediaCard";
 const stylesFunc = makeStyles((theme) => ({
   wrapper: {
     marginTop: "5rem",
-    height: "calc(100vh - 20rem)",
+    // height: "calc(100vh - 20rem)",
     textAlign: "center",
   },
 }));
@@ -33,23 +38,32 @@ function Main() {
 
   return (
     <Container className={mainStyles.wrapper}>
-      {loading && <Typography variant="h4">Loading page...</Typography>}
-      <Grid
-        container
-        spacing={3}
-        direction="row"
-        justify="center"
-        alignItems="flex-start"
-      >
-        {userData &&
-          userData?.map((user) => {
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <Grid
+          container
+          spacing={3}
+          direction="row"
+          justify="center"
+          alignItems="flex-start"
+        >
+          {userData?.map((user) => {
             return (
-              <Grid key={user.id} item md={4} sm={6} xs={12} spacing={3}>
+              <Grid
+                style={{ display: "flex", justifyContent: "center" }}
+                key={user.id}
+                item
+                md={4}
+                sm={6}
+                xs={12}
+              >
                 <MediaCard user={user} />
               </Grid>
             );
           })}
-      </Grid>
+        </Grid>
+      )}
     </Container>
   );
 }

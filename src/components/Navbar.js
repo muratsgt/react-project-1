@@ -1,16 +1,19 @@
 import React, { useContext, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
+import {
+  AppBar,
+  Menu,
+  Button,
+  Toolbar,
+  Typography,
+  IconButton,
+  MenuItem,
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import { FirebaseAuthContext } from "../context/AuthContext";
 import firebase from "../firebase/firebase.utils";
-
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
   const { currentUser } = useContext(FirebaseAuthContext);
+  const history = useHistory();
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -39,10 +43,15 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
-  const handleSignOut = useCallback (() => {
+  const handleSignOut = useCallback(() => {
     firebase.signOut();
     setAnchorEl(null);
   }, []);
+
+  const handleLogin = () => {
+    history.push("/login");
+    setAnchorEl(null);
+  };
 
   return (
     <div className={classes.root}>
@@ -59,7 +68,7 @@ export default function Navbar() {
           <Typography variant="h6" className={classes.title}>
             React Share
           </Typography>
-          {currentUser && (
+          {currentUser ? (
             <div>
               <IconButton
                 aria-label="account of current user"
@@ -91,6 +100,10 @@ export default function Navbar() {
                 <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
               </Menu>
             </div>
+          ) : (
+            <Button onClick={handleLogin} color="inherit">
+              Log in
+            </Button>
           )}
         </Toolbar>
       </AppBar>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Button,
   TextField,
@@ -12,6 +12,7 @@ import firebase from "../firebase/firebase.utils";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Alert from '@material-ui/lab/Alert';
 
 const signinSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email required"),
@@ -27,9 +28,8 @@ const styles = makeStyles((theme) => ({
     textAlign: "center",
   },
   avatar: {
-    margin: "2rem auto",
+    margin: "1rem auto",
     backgroundColor: theme.palette.secondary.main,
-    padding: 3,
   },
 }));
 
@@ -39,22 +39,27 @@ const initialValues = {
 };
 
 function Signin() {
+
+  const [loginError, setLoginError] = useState(null);
+
   const googleClick = () => {
     firebase.signWithGoogle();
   };
 
   const handleFormSubmit = (values) => {
-    firebase.signIn(values.email, values.password);
+    firebase.signIn(values.email, values.password).catch(err=>console.log('err', err));
   };
 
   const signinStyles = styles();
+
+  console.log('loginError', loginError)
 
   return (
     <Container className={signinStyles.wrapper} maxWidth="sm">
       <Avatar className={signinStyles.avatar}>
         <LockOutlinedIcon />
       </Avatar>
-      <Typography variant="h4">
+      <Typography style={{ margin: 10 }} variant="h4">
         Sign in
       </Typography>
       <Formik
@@ -67,6 +72,7 @@ function Signin() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
+                  error
                   name="email"
                   id="outlined-basic"
                   label="E-mail"
@@ -92,6 +98,11 @@ function Signin() {
                   helperText={errors.password}
                 />
               </Grid>
+              {loginError && <Grid item xs={12}>
+                <Alert severity="error">
+                  This is an error alert — check it out!
+                </Alert>
+              </Grid>}
               <Grid item xs={12}>
                 <Button
                   type="submit"
