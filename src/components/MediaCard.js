@@ -13,10 +13,19 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
   root: {
-    width: 345,
+    maxWidth: 300,
+    margin: "auto",
+    marginBottom:'30px',
+    transition: "0.3s",
+    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.5)",
+    '&:hover':{
+      transform: "scale(1.02)",
+      boxShadow: "0 20px 70px -13px rgba(0,0,0,0.5)"
+    }
   },
   media: {
     height: 300,
+    width: 300,
   },
 });
 
@@ -28,8 +37,7 @@ const useStyles = makeStyles({
 // title: "mr"
 
 export default function MediaCard({ user }) {
-  const { email, firstName, id, lastName, picture, title } = user;
-  title[0].toUpperCase()
+  const { firstName, id, lastName, picture, title } = user;
 
   const classes = useStyles();
   const history = useHistory();

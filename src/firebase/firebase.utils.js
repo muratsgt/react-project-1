@@ -1,5 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import { customErrorHandler } from "../helper/customErrorHandler";
+
 // firestore
 
 const devConfig = {
@@ -19,21 +21,27 @@ const config = process.env.NODE_ENV === "development" ? devConfig : prodConfig;
 
 class Firebase {
   constructor() {
-    // TODO: add initialize check
-    firebase.initializeApp(config);
+    // initialize check
+    if (!firebase.apps.length) {
+      firebase.initializeApp(config);
+    } else {
+      firebase.app(); // if already initialized, use that one
+    }
     this.firebaseAuth = firebase.auth();
   }
 
   // register registerWithEmail
-  register(displayName, email, password) {
-    this.firebaseAuth
-      .createUserWithEmailAndPassword(email, password) // async
-      .then(() => {
-        this.firebaseAuth.currentUser.updateProfile({
-          displayName: displayName,
-        });
-      })
-      .catch((err) => console.log(err));
+  async register(displayName, email, password) {
+
+    try {
+      await this.firebaseAuth.createUserWithEmailAndPassword(email, password);
+      this.firebaseAuth.currentUser.updateProfile({
+        displayName: displayName,
+      });
+      return "Success";
+    } catch (err) {
+      return customErrorHandler(err);
+    }
   }
 
   // sign in/up with google
@@ -44,8 +52,17 @@ class Firebase {
   }
 
   // login signinWithEmailandPassword
-  signIn(email, password) {
-    this.firebaseAuth.signInWithEmailAndPassword(email, password);
+  // signIn(email, password) {
+  //   this.firebaseAuth.signInWithEmailAndPassword(email, password);
+  // }
+
+  async singIn(email, password) {
+    try {
+      await this.firebaseAuth.signInWithEmailAndPassword(email, password);
+      return "Success";
+    } catch (err) {
+      return customErrorHandler(err);
+    }
   }
 
   // logout signOut

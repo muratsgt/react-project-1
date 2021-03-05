@@ -1,9 +1,22 @@
-import React from "react";
-import { Button, TextField, Grid, Container } from "@material-ui/core";
+import { useState } from "react";
+import {
+  Button,
+  TextField,
+  Grid,
+  Container,
+  Snackbar,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
 import firebase from "../firebase/firebase.utils";
 import * as Yup from "yup";
+import MuiAlert from "@material-ui/lab/Alert";
+import { useHistory } from "react-router-dom";
+import SnackPop from "../components/SnackPop";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const signupSchema = Yup.object().shape({
   displayName: Yup.string()
@@ -23,6 +36,26 @@ const styles = makeStyles({
 });
 
 function Signup() {
+  const [signError, setSignError] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const history = useHistory();
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const checkResult = (res) => {
+    if (res == "Success") {
+      history.push(`/`);
+    } else {
+      setSignError(res);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       displayName: "",
@@ -30,7 +63,10 @@ function Signup() {
       password: "",
     },
     onSubmit: (values) => {
-      firebase.register(values.displayName, values.email, values.password);
+      firebase
+        .register(values.displayName, values.email, values.password)
+        .then(checkResult)
+        .finally(() => setOpen(true));
     },
     validationSchema: signupSchema,
   });
@@ -43,6 +79,12 @@ function Signup() {
   return (
     <div>
       <Container className={signupStyles.wrapper} maxWidth="sm">
+        {/* <SnackPop message={signError} type={"error"} open={open} /> */}
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            {signError}
+          </Alert>
+        </Snackbar>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -51,10 +93,13 @@ function Signup() {
                 label="Display Name"
                 variant="outlined"
                 fullWidth
-                value={formik.values.displayName}
-                onChange={formik.handleChange}
-                error={formik.errors.displayName}
-                helperText={formik.errors.displayName}
+                // value={formik.values.displayName}
+                // onChange={formik.handleChange}
+                {...formik.getFieldProps("displayName")}
+                error={formik.touched.displayName && formik.errors.displayName}
+                helperText={
+                  formik.touched.displayName && formik.errors.displayName
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -64,10 +109,11 @@ function Signup() {
                 label="E-mail"
                 variant="outlined"
                 fullWidth
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.errors.email}
-                helperText={formik.errors.email}
+                // value={formik.values.email}
+                // onChange={formik.handleChange}
+                {...formik.getFieldProps("email")}
+                error={formik.touched.email && formik.errors.email}
+                helperText={formik.touched.email && formik.errors.email}
               />
             </Grid>
             <Grid item xs={12}>
@@ -78,12 +124,20 @@ function Signup() {
                 variant="outlined"
                 fullWidth
                 type="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                error={formik.errors.password}
-                helperText={formik.errors.password}
+                // value={formik.values.password}
+                // onChange={formik.handleChange}
+                {...formik.getFieldProps("password")}
+                error={formik.touched.password && formik.errors.password}
+                helperText={formik.touched.password && formik.errors.password}
               />
             </Grid>
+            {/* {signError && (
+              <Grid item xs={12}>
+                <MuiAlert variant="outlined" severity="error">
+                  {signError}
+                </MuiAlert>
+              </Grid>
+            )} */}
             <Grid item xs={12}>
               <Button
                 type="submit"
@@ -107,15 +161,6 @@ function Signup() {
           </Grid>
         </form>
       </Container>
-
-      {/* 
-            displayName input
-            email input
-            password input
-            submit button
-
-            google signup button
-            */}
     </div>
   );
 }

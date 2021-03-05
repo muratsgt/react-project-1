@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Button,
   TextField,
@@ -12,7 +12,8 @@ import firebase from "../firebase/firebase.utils";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Alert from '@material-ui/lab/Alert';
+import Alert from "@material-ui/lab/Alert";
+import { useHistory } from "react-router-dom";
 
 const signinSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email required"),
@@ -39,20 +40,29 @@ const initialValues = {
 };
 
 function Signin() {
-
   const [loginError, setLoginError] = useState(null);
+  const history = useHistory();
 
   const googleClick = () => {
     firebase.signWithGoogle();
   };
 
+  const checkResult = (res) => {
+    if (res == "Success") {
+      history.push(`/`);
+    } else {
+      setLoginError(res);
+    }
+  };
+
   const handleFormSubmit = (values) => {
-    firebase.signIn(values.email, values.password).catch(err=>console.log('err', err));
+    firebase
+      .singIn(values.email, values.password)
+      .then(checkResult)
+      .catch((errorr) => console.log("errorr", errorr));
   };
 
   const signinStyles = styles();
-
-  console.log('loginError', loginError)
 
   return (
     <Container className={signinStyles.wrapper} maxWidth="sm">
@@ -67,7 +77,7 @@ function Signin() {
         onSubmit={handleFormSubmit}
         validationSchema={signinSchema}
       >
-        {({ values, handleChange, handleSubmit, errors }) => (
+        {({ handleSubmit, getFieldProps, errors, touched }) => (
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -78,10 +88,11 @@ function Signin() {
                   label="E-mail"
                   variant="outlined"
                   fullWidth
-                  value={values.email}
-                  onChange={handleChange}
-                  error={errors.email}
-                  helperText={errors.email}
+                  // value={values.email}
+                  // onChange={handleChange}
+                  {...getFieldProps("email")}
+                  error={touched.email && errors.email}
+                  helperText={touched.email && errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -92,17 +103,18 @@ function Signin() {
                   variant="outlined"
                   fullWidth
                   type="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  error={errors.password}
-                  helperText={errors.password}
+                  // value={values.password}
+                  // onChange={handleChange}
+                  {...getFieldProps("password")}
+                  error={touched.password && errors.password}
+                  helperText={touched.password && errors.password}
                 />
               </Grid>
-              {loginError && <Grid item xs={12}>
-                <Alert severity="error">
-                  This is an error alert — check it out!
-                </Alert>
-              </Grid>}
+              {loginError && (
+                <Grid item xs={12}>
+                  <Alert severity="error">{loginError}</Alert>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <Button
                   type="submit"
