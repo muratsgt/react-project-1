@@ -9,7 +9,7 @@ import {
   IconButton,
   MenuItem,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import HomeIcon from '@material-ui/icons/Home';
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { FirebaseAuthContext } from "../context/AuthContext";
 import firebase from "../firebase/firebase.utils";
@@ -53,6 +53,10 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
+  const pressHome = () => {
+    history.push("/")
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -62,8 +66,9 @@ export default function Navbar() {
             className={classes.menuButton}
             color="inherit"
             aria-label="menu"
+            onClick={pressHome}
           >
-            <MenuIcon />
+            <HomeIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             React Share
