@@ -2,43 +2,33 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Container,
-  Typography,
   Grid,
   CircularProgress,
 } from "@material-ui/core";
-import axios from "axios";
 import MediaCard from "../components/MediaCard";
-// import { fetchData } from "../helper/FetchData";
+import { fetchData } from "../helper/FetchData";
 
 const stylesFunc = makeStyles((theme) => ({
   wrapper: {
     marginTop: "5rem",
-    // height: "calc(100vh - 20rem)",
     textAlign: "center",
   },
 }));
 
 function Main() {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const { REACT_APP_API_BASE_URL, REACT_APP_API_TOKEN } = process.env;
 
   const mainStyles = stylesFunc();
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get(`${REACT_APP_API_BASE_URL}/user`, {
-        headers: { "app-id": REACT_APP_API_TOKEN },
-      })
-      .then((resp) => setUserData(resp?.data?.data))
+    fetchData(`/user`)
+      .then((res) => setUserData(res?.data))
       .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
   }, []);
 
   return (
     <Container className={mainStyles.wrapper}>
-      {loading ? (
+      {!userData ? (
         <CircularProgress />
       ) : (
         <Grid

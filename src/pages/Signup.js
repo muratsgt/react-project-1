@@ -5,6 +5,8 @@ import {
   Grid,
   Container,
   Snackbar,
+  Avatar,
+  Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
@@ -12,7 +14,6 @@ import firebase from "../firebase/firebase.utils";
 import * as Yup from "yup";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory } from "react-router-dom";
-import SnackPop from "../components/SnackPop";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -28,13 +29,16 @@ const signupSchema = Yup.object().shape({
     .min(8, "Password is too short - should be 8 chars minimum."),
 });
 
-const styles = makeStyles({
+const styles = makeStyles((theme)=>({
   wrapper: {
     marginTop: "5rem",
-    padding: 5,
+    textAlign: "center"
   },
-});
-
+  avatar: {
+    margin: "1rem auto",
+    backgroundColor: theme.palette.secondary.main,
+  },
+}));
 
 function Signup() {
   const [signError, setSignError] = useState(null);
@@ -77,15 +81,20 @@ function Signup() {
   };
 
   const signupStyles = styles();
+
   return (
     <div>
       <Container className={signupStyles.wrapper} maxWidth="sm">
-        {/* <SnackPop message={signError} type={"error"} open={open} /> */}
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="error">
             {signError}
           </Alert>
         </Snackbar>
+        <Avatar className={signupStyles.avatar}>
+        </Avatar>
+        <Typography style={{ margin: 10 }} variant="h4">
+          Sign up
+        </Typography>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -132,13 +141,6 @@ function Signup() {
                 helperText={formik.touched.password && formik.errors.password}
               />
             </Grid>
-            {/* {signError && (
-              <Grid item xs={12}>
-                <MuiAlert variant="outlined" severity="error">
-                  {signError}
-                </MuiAlert>
-              </Grid>
-            )} */}
             <Grid item xs={12}>
               <Button
                 type="submit"

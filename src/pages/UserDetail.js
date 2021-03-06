@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchData } from "../helper/FetchData";
 import { makeStyles } from "@material-ui/core/styles";
-import { Container, Typography, Grid , Button, CircularProgress} from "@material-ui/core";
+import { Container, Typography, Button, CircularProgress} from "@material-ui/core";
 import { format as formatDate, parseISO } from "date-fns";
 import EmailIcon from '@material-ui/icons/Email';
 
@@ -37,24 +37,21 @@ const stylesFunc = makeStyles((theme) => ({
 function UserDetail() {
   const { id } = useParams();
   const [userDetail, setUserDetail] = useState();
-  const [loading, setLoading] = useState(false);
   const mainStyles = stylesFunc();
 
   const sendEmail = () => {
-
+    window.open("mailto:"+userDetail?.email);
   }
 
   useEffect(() => {
-    setLoading(true);
     fetchData(`/user/${id}`)
       .then((res) => setUserDetail(res))
       .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
   }, [id]);
 
   return (
       <Container>
-        {loading ? (
+        {!userDetail ? (
           <Container className={mainStyles.wrapper}>
             <CircularProgress />
           </Container>
@@ -80,7 +77,7 @@ function UserDetail() {
                 variant="outlined"
                 color="primary"
                 className={mainStyles.buttonStyle}
-                onClick={()=>window.open("mailto:"+userDetail?.email)}
+                onClick={sendEmail}
                 startIcon={<EmailIcon />}
               >
                 Send e-mail

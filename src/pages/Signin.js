@@ -25,7 +25,6 @@ const signinSchema = Yup.object().shape({
 const styles = makeStyles((theme) => ({
   wrapper: {
     marginTop: "5rem",
-    height: "calc(100vh - 20rem)",
     textAlign: "center",
   },
   avatar: {
@@ -60,6 +59,10 @@ function Signin() {
       .singIn(values.email, values.password)
       .then(checkResult)
       .catch((errorr) => console.log("errorr", errorr));
+  };
+
+  const goSignUp = () => {
+    history.push(`/register`);
   };
 
   const signinStyles = styles();
@@ -133,6 +136,16 @@ function Signin() {
                   onClick={googleClick}
                 >
                   Sign in with Google
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={goSignUp}
+                >
+                  Don't have an account yet? Sign Up
                 </Button>
               </Grid>
             </Grid>
