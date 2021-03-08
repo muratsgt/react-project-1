@@ -19,20 +19,20 @@ const stylesFunc = makeStyles((theme) => ({
   },
 }));
 
-function UserPost() {
-  const { id } = useParams();
-  const [userPost, setUserPost] = useState();
+function TagPost() {
+  const { tag } = useParams();
+  const [tagPost, setTagPost] = useState();
   const mainStyles = stylesFunc();
 
   useEffect(() => {
-    fetchData(`/user/${id}/post`)
-      .then((res) => setUserPost(res?.data))
+    fetchData(`/tag/${tag}/post`)
+      .then((res) => setTagPost(res?.data))
       .catch((err) => console.log(err));
-  }, [id]);
+  }, [tag]);
 
   return (
     <Container>
-      {!userPost ? (
+      {!tagPost ? (
         <Container className={mainStyles.wrapper}>
           <CircularProgress />
         </Container>
@@ -45,7 +45,7 @@ function UserPost() {
             justify="center"
             alignItems="flex-start"
           >
-            {userPost.map((post) => {
+            {tagPost.map((post) => {
               return (
                 <Grid
                   key={post.id}
@@ -65,4 +65,4 @@ function UserPost() {
   );
 }
 
-export default UserPost;
+export default TagPost;

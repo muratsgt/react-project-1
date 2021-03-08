@@ -6,6 +6,7 @@ import Signin from "../pages/Signin";
 import ForgotPass from "../pages/ForgotPass";
 import UserDetail from "../pages/UserDetail";
 import UserPost from "../pages/UserPost";
+import TagPost from "../pages/TagPost";
 import Navbar from "../components/Navbar";
 import StickyFooter from "../components/Footer";
 import { FirebaseAuthContext } from "../context/AuthContext";
@@ -28,6 +29,11 @@ function AppRouter() {
           exact
           path="/user/:id/post"
           component={currentUser ? UserPost : Signin}
+        ></Route>
+        <Route
+          exact
+          path="/tag/:tag/post"
+          component={currentUser ? TagPost : Signin}
         ></Route>
         <Route path="/" component={Main}></Route>
       </Switch>
