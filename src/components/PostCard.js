@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Link from "@material-ui/core/Link";
@@ -11,12 +11,13 @@ import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { format as formatDate, parseISO } from "date-fns";
 import { useHistory } from "react-router-dom";
+import { fetchData } from "../helper/FetchData";
+import CommentCard from "./CommentCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,14 +39,17 @@ const useStyles = makeStyles((theme) => ({
     transform: "rotate(180deg)",
   },
   avatar: {
-    backgroundColor: red[500],
+    height: "3rem",
+    width: "3rem",
   },
   avatarImage: {
     resizeMode: "contain",
+    height: "3rem",
+    width: "3rem",
   },
-  tagsArea:{
-    margin:0,
-    padding:0,
+  tagsArea: {
+    margin: 0,
+    padding: 0,
   },
   linkWord: {
     marginLeft: 7,
@@ -53,27 +57,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const post = {
-//   owner: {
-//     id: "0F8JIqi4zwvb77FGz6Wt",
-//     lastName: "Fiedler",
-//     firstName: "Heinz-Georg",
-//     email: "heinz-georg.fiedler@example.com",
-//     title: "mr",
-//     picture: "https://randomuser.me/api/portraits/men/81.jpg",
-//   },
-//   id: "h6SMm2IrtKS2voz2tAOq",
-//   image: "https://img.dummyapi.io/photo-1568484730668-25478021de14.jpg",
-//   publishDate: "2020-04-13T06:06:18.751Z",
-//   text: "long-coated white dog",
-//   tags: ["dog", "animal", "pet"],
-//   link: null,
-//   likes: 22,
-// };
-
 export default function PostCard({ post }) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [comments, setComments] = useState(null);
   const history = useHistory();
 
   const handleExpandClick = () => {
@@ -83,6 +70,12 @@ export default function PostCard({ post }) {
   const clickTag = (tag) => {
     history.push(`/tag/${tag}/post`);
   };
+
+  useEffect(() => {
+    fetchData(`/post/${post.id}/comment`)
+      .then((res) => setComments(res?.data))
+      .catch((err) => console.log(err));
+  }, [post.id]);
 
   return (
     <Card className={classes.root}>
@@ -146,11 +139,9 @@ export default function PostCard({ post }) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          {/* TODO: map comments */}
-          <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and
-            set aside for 10 minutes.
-          </Typography>
+          {comments?.map((item) => {
+            return <CommentCard item={item}></CommentCard>;
+          })}
         </CardContent>
       </Collapse>
     </Card>
