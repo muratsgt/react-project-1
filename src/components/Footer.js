@@ -8,7 +8,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary">
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
-        React Share
+        Murata
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -37,7 +37,7 @@ export default function StickyFooter() {
     <div id="footer" className = {classes.main}>
       <footer className={classes.footer}>
         <Container maxWidth="sm">
-          <Typography variant="body1">Address Virginia, USA.</Typography>
+          <Typography variant="body1">Address Erfurt, GERMANY.</Typography>
           <Copyright />
         </Container>
       </footer>

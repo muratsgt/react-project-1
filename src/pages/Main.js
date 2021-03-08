@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Container,
-  Grid,
-  CircularProgress,
-} from "@material-ui/core";
+import { Container, Grid, LinearProgress } from "@material-ui/core";
 import MediaCard from "../components/MediaCard";
 import { fetchData } from "../helper/FetchData";
 
@@ -23,13 +19,13 @@ function Main() {
   useEffect(() => {
     fetchData(`/user`)
       .then((res) => setUserData(res?.data))
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
   }, []);
 
   return (
     <Container className={mainStyles.wrapper}>
       {!userData ? (
-        <CircularProgress />
+          <LinearProgress />
       ) : (
         <Grid
           container

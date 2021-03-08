@@ -9,7 +9,7 @@ import {
   IconButton,
   MenuItem,
 } from "@material-ui/core";
-import HomeIcon from '@material-ui/icons/Home';
+import HomeIcon from "@material-ui/icons/Home";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { FirebaseAuthContext } from "../context/AuthContext";
 import firebase from "../firebase/firebase.utils";
@@ -48,14 +48,19 @@ export default function Navbar() {
     setAnchorEl(null);
   }, []);
 
-  const handleLogin = () => {
+  const gotoLogin = () => {
     history.push("/login");
     setAnchorEl(null);
   };
 
+  const gotoSignup = () => {
+    history.push("/register");
+    setAnchorEl(null);
+  };
+
   const pressHome = () => {
-    history.push("/")
-  }
+    history.push("/");
+  };
 
   return (
     <div className={classes.root}>
@@ -106,9 +111,10 @@ export default function Navbar() {
               </Menu>
             </div>
           ) : (
-            <Button onClick={handleLogin} color="inherit">
-              Log in
-            </Button>
+            <>
+              <MenuItem onClick={gotoLogin}>Sign In</MenuItem>
+              <MenuItem onClick={gotoSignup}>Sign Up</MenuItem>
+            </>
           )}
         </Toolbar>
       </AppBar>

@@ -19,6 +19,11 @@ const config = process.env.NODE_ENV === "development" ? devConfig : prodConfig;
 // react, root klasordeki .env klasorundeki degiskenlerden
 // basinda REACT_APP_ yazanlari otomatik olarak process.env.NODE_ENV e atiyor
 
+const actionCodeSettings = {
+  url: "http://localhost:3000/",
+  handleCodeInApp: false,
+}
+
 class Firebase {
   constructor() {
     // initialize check
@@ -32,7 +37,6 @@ class Firebase {
 
   // register registerWithEmail
   async register(displayName, email, password) {
-
     try {
       await this.firebaseAuth.createUserWithEmailAndPassword(email, password);
       this.firebaseAuth.currentUser.updateProfile({
@@ -51,14 +55,20 @@ class Firebase {
     this.firebaseAuth.signInWithPopup(googleProvider);
   }
 
-  // login signinWithEmailandPassword
-  // signIn(email, password) {
-  //   this.firebaseAuth.signInWithEmailAndPassword(email, password);
-  // }
-
+  // sign in function
   async singIn(email, password) {
     try {
       await this.firebaseAuth.signInWithEmailAndPassword(email, password);
+      return "Success";
+    } catch (err) {
+      return customErrorHandler(err);
+    }
+  }
+
+  // forgot password
+  async forgotPass(email) {
+    try {
+      await this.firebaseAuth.sendPasswordResetEmail(email, actionCodeSettings);
       return "Success";
     } catch (err) {
       return customErrorHandler(err);

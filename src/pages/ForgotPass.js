@@ -11,15 +11,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import firebase from "../firebase/firebase.utils";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import Alert from "@material-ui/lab/Alert";
-import { useHistory } from "react-router-dom";
 
 const signinSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email required"),
-  password: Yup.string()
-    .required("No password provided.")
-    .min(8, "Password is too short - should be 8 chars minimum."),
 });
 
 const styles = makeStyles((theme) => ({
@@ -38,35 +34,25 @@ const initialValues = {
   password: "",
 };
 
-function Signin() {
-  const [loginError, setLoginError] = useState(null);
-  const history = useHistory();
-
-  const googleClick = () => {
-    firebase.signWithGoogle();
-  };
+function ForgotPass() {
+  const [emailError, setEmailError] = useState(null);
+  const [successReset, setSuccessReset] = useState(null);
 
   const checkResult = (res) => {
     if (res == "Success") {
-      history.push(`/`);
+      setEmailError(null);
+      setSuccessReset(true);
     } else {
-      setLoginError(res);
+      setSuccessReset(null);
+      setEmailError("E-mail address not found!");
     }
   };
 
   const handleFormSubmit = (values) => {
     firebase
-      .singIn(values.email, values.password)
+      .forgotPass(values.email)
       .then(checkResult)
       .catch((errorr) => console.log("errorr", errorr));
-  };
-
-  const goSignUp = () => {
-    history.push(`/register`);
-  };
-
-  const goForgotPass = () => {
-    history.push(`/forgotpass`);
   };
 
   const signinStyles = styles();
@@ -74,10 +60,10 @@ function Signin() {
   return (
     <Container className={signinStyles.wrapper} maxWidth="sm">
       <Avatar className={signinStyles.avatar}>
-        <LockOutlinedIcon />
+        <VpnKeyIcon />
       </Avatar>
       <Typography style={{ margin: 10 }} variant="h4">
-        Sign in
+        Forgot your password?
       </Typography>
       <Formik
         initialValues={initialValues}
@@ -95,31 +81,19 @@ function Signin() {
                   label="E-mail"
                   variant="outlined"
                   fullWidth
-                  // value={values.email}
-                  // onChange={handleChange}
                   {...getFieldProps("email")}
                   error={touched.email && errors.email}
                   helperText={touched.email && errors.email}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  name="password"
-                  id="outlined-basic"
-                  label="Password"
-                  variant="outlined"
-                  fullWidth
-                  type="password"
-                  // value={values.password}
-                  // onChange={handleChange}
-                  {...getFieldProps("password")}
-                  error={touched.password && errors.password}
-                  helperText={touched.password && errors.password}
-                />
-              </Grid>
-              {loginError && (
+              {emailError && (
                 <Grid item xs={12}>
-                  <Alert severity="error">{loginError}</Alert>
+                  <Alert severity="error">{emailError}</Alert>
+                </Grid>
+              )}
+              {successReset && (
+                <Grid item xs={12}>
+                  <Alert severity="success">"A link has sent to your email."</Alert>
                 </Grid>
               )}
               <Grid item xs={12}>
@@ -132,34 +106,6 @@ function Signin() {
                   Submit
                 </Button>
               </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={googleClick}
-                >
-                  Sign in with Google
-                </Button>
-              </Grid>
-              <Grid item md={6}>
-                <Button
-                  color="primary"
-                  fullWidth
-                  onClick={goForgotPass}
-                >
-                  Forgot your password?
-                </Button>
-              </Grid>
-              <Grid item md={6}>
-                <Button
-                  color="secondary"
-                  fullWidth
-                  onClick={goSignUp}
-                >
-                  Don't have an account yet? Sign Up
-                </Button>
-              </Grid>
             </Grid>
           </form>
         )}
@@ -168,4 +114,4 @@ function Signin() {
   );
 }
 
-export default Signin;
+export default ForgotPass;
