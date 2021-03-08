@@ -79,7 +79,6 @@ class Firebase {
   signOut() {
     this.firebaseAuth.signOut();
   }
-  // forgot password
 }
 
 export default new Firebase();

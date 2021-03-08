@@ -14,7 +14,7 @@ import * as Yup from "yup";
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import Alert from "@material-ui/lab/Alert";
 
-const signinSchema = Yup.object().shape({
+const forgotPassSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email required"),
 });
 
@@ -31,7 +31,6 @@ const styles = makeStyles((theme) => ({
 
 const initialValues = {
   email: "",
-  password: "",
 };
 
 function ForgotPass() {
@@ -55,11 +54,11 @@ function ForgotPass() {
       .catch((errorr) => console.log("errorr", errorr));
   };
 
-  const signinStyles = styles();
+  const forgotPassStyles = styles();
 
   return (
-    <Container className={signinStyles.wrapper} maxWidth="sm">
-      <Avatar className={signinStyles.avatar}>
+    <Container className={forgotPassStyles.wrapper} maxWidth="sm">
+      <Avatar className={forgotPassStyles.avatar}>
         <VpnKeyIcon />
       </Avatar>
       <Typography style={{ margin: 10 }} variant="h4">
@@ -68,7 +67,7 @@ function ForgotPass() {
       <Formik
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
-        validationSchema={signinSchema}
+        validationSchema={forgotPassSchema}
       >
         {({ handleSubmit, getFieldProps, errors, touched }) => (
           <form onSubmit={handleSubmit}>

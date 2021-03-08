@@ -41,13 +41,18 @@ export default function MediaCard({ user }) {
 
   const classes = useStyles();
   const history = useHistory();
-  const cardClick = () => {
+
+  const profileClick = () => {
     history.push(`/user/${id}`);
+  };
+
+  const postClick = () => {
+    history.push(`/user/${id}/post`);
   };
 
   return (
     <Card className={classes.root}>
-      <CardActionArea onClick={cardClick}>
+      <CardActionArea onClick={profileClick}>
         <CardMedia
           className={classes.media}
           image={picture}
@@ -60,10 +65,10 @@ export default function MediaCard({ user }) {
         </CardContent>
       </CardActionArea>
       <CardActions style={{display: "flex", justifyContent: "center"}}>
-        <Button onClick={cardClick} size="medium" color="primary">
+        <Button onClick={profileClick} size="medium" color="primary">
           Profile
         </Button>
-        <Button  color="secondary">
+        <Button onClick={postClick} color="secondary">
           Posts
         </Button>
       </CardActions>
