@@ -139,9 +139,15 @@ export default function PostCard({ post }) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          {comments?.map((item) => {
-            return <CommentCard item={item}></CommentCard>;
-          })}
+          {comments?.length ? (
+            comments?.map((item) => {
+              return <CommentCard key={item.id} item={item}></CommentCard>;
+            })
+          ) : (
+            <Typography variant="body2" color="textSecondary" component="p">
+              No comments yet.
+            </Typography>
+          )}
         </CardContent>
       </Collapse>
     </Card>
