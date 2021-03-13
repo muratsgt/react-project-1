@@ -61,6 +61,7 @@ export default function PostCard({ post }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [comments, setComments] = useState(null);
+  const [likePressed, setLikePressed] = useState(false);
   const history = useHistory();
 
   const handleExpandClick = () => {
@@ -70,6 +71,11 @@ export default function PostCard({ post }) {
   const clickTag = (tag) => {
     history.push(`/tag/${tag}/post`);
   };
+
+  const pressLike = () => {
+    setLikePressed(!likePressed);
+    console.log(`objecttionnnnnnnnnnn`)
+  }
 
   useEffect(() => {
     fetchData(`/post/${post.id}/comment`)
@@ -89,11 +95,11 @@ export default function PostCard({ post }) {
             ></img>
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
+        // action={
+        //   <IconButton aria-label="settings">
+        //     <MoreVertIcon />
+        //   </IconButton>
+        // }
         title={post.owner.firstName + " " + post.owner.lastName}
         subheader={formatDate(parseISO(post.publishDate), "dd MMM yyyy, HH:mm")}
       />
@@ -120,8 +126,8 @@ export default function PostCard({ post }) {
         ))}
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton aria-label="add to favorites" onClick={pressLike}>
+          <FavoriteIcon htmlColor={likePressed ? "#DC143C" : "gray"}/>
         </IconButton>
         <Typography variant="body2" component="p">
           {post.likes} Likes
