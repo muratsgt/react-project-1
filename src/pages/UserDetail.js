@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { fetchData } from "../helper/FetchData";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container, Typography, Button, CircularProgress} from "@material-ui/core";
@@ -38,9 +38,14 @@ function UserDetail() {
   const { id } = useParams();
   const [userDetail, setUserDetail] = useState();
   const mainStyles = stylesFunc();
+  const history = useHistory();
 
   const sendEmail = () => {
     window.open("mailto:"+userDetail?.email);
+  }
+
+  const goUserPost = () => {
+    history.push(`/user/${id}/post`);
   }
 
   useEffect(() => {
@@ -70,6 +75,7 @@ function UserDetail() {
                 variant="contained"
                 color="primary"
                 className={mainStyles.buttonStyle}
+                onClick={goUserPost}
               >
                 Posts
               </Button>
